@@ -126,8 +126,7 @@ in
   programs.oh-my-posh.enable = true;
   programs.oh-my-posh.enableZshIntegration = true;
   programs.oh-my-posh.enableBashIntegration = true;
-  #services.flatpak.enable = true;
-  #programs.freecad-wayland.enable = true;
+
  
 
   
