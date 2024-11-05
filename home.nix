@@ -44,6 +44,16 @@ in
     pkgs.flatpak
     pkgs.waveterm
     pkgs.stremio
+    pkgs.k9s
+    pkgs.kubectl
+    pkgs.kubernetes-helm
+    pkgs.powershell
+    pkgs.vmware-workstation
+    pkgs.microsoft-edge
+    pkgs.ungoogled-chromium
+
+
+
 
 
 
