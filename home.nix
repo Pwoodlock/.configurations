@@ -127,14 +127,6 @@ in
   programs.oh-my-posh.enableZshIntegration = true;
   programs.oh-my-posh.enableBashIntegration = true;
 
- 
-
-  
-
-
-
-
-
 
 
   # Let Home Manager install and manage itself.
