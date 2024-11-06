@@ -120,6 +120,7 @@
     zsh
     netbird
     netbird-ui
+    vmware-workstation
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
