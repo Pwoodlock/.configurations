@@ -13,6 +13,10 @@
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
+  boot.loader.grub.useOSProber = true;
+
+
+
 
   networking.hostName = "nixos"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
@@ -87,14 +91,13 @@
   users.users.nixos-dd = {
     isNormalUser = true;
     description = "Patrick Woodlock";
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = [ "networkmanager" "wheel" "dialout" ];
     packages = with pkgs; [
       
       
       kdePackages.kate
       thunderbird
-      nextcloud-client # Migrate to home.nix
-    
+      kdePackages.kdeconnect-kde
     ];
   };
 
@@ -115,11 +118,11 @@
     wget
     git
     curl
-    flatpak
     htop
     zsh
     netbird
     netbird-ui
+    kdePackages.karousel
     vmware-workstation
   ];
 
@@ -157,10 +160,17 @@
   #**** Environment Shells 
   environment.shells = with pkgs; [ zsh ];
   users.defaultUserShell = pkgs.zsh;
-  programs.zsh.enable = true;
+ 
 
   #**** PROGRAMS *****
   programs.thunderbird.enable = true;
+  programs.appimage.enable = true;
+  programs.zsh.enable = true;
 
-
+  # VMware Workstation criteria
+  virtualisation.vmware.host.enable = true;
+  boot.kernelModules = [
+  "vmmon"  # VMware Monitor
+  "vmnet"  # VMware Network
+];
 }

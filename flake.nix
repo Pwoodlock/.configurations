@@ -61,7 +61,7 @@
     # Now it's nixos-dd which is the actual users home directory.
     nixos-dd = home-manager.lib.homeManagerConfiguration {
       inherit pkgs;
-      modules = [ ./home.nix ];
+      modules = [ ./devpc.nix ];
     };
 
 
