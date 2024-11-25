@@ -94,7 +94,7 @@
     extraGroups = [ "networkmanager" "wheel" "dialout" ];
     packages = with pkgs; [
       
-      
+      obsidian
       kdePackages.kate
       thunderbird
       kdePackages.kdeconnect-kde
