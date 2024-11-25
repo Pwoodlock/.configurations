@@ -36,6 +36,7 @@ in
     pkgs.starship
     pkgs.carapace
     pkgs.vscode
+    pkgs.discord
   ];
 
   # Manage user files (optional section)
