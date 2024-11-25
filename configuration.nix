@@ -93,7 +93,7 @@
     description = "Patrick Woodlock";
     extraGroups = [ "networkmanager" "wheel" "dialout" ];
     packages = with pkgs; [
-      
+      discord
       obsidian
       kdePackages.kate
       thunderbird
