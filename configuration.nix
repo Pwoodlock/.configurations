@@ -124,6 +124,7 @@
     netbird-ui
     kdePackages.karousel
     vmware-workstation
+    flatpak
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
