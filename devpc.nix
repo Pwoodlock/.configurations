@@ -37,6 +37,7 @@ in
     pkgs.carapace
     pkgs.vscode
     pkgs.discord
+    pkgs.openscad
   ];
 
   # Manage user files (optional section)
