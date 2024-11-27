@@ -97,13 +97,15 @@
       obsidian
       kdePackages.kate
       thunderbird
-      kdePackages.kdeconnect-kde
+#      kdePackages.kdeconnect-kde
+      protonmail-bridge
+
     ];
   };
 
   # Enable automatic login for the user.
-  services.xserver.displayManager.autoLogin.enable = true;
-  services.xserver.displayManager.autoLogin.user = "nixos-dd";
+#  services.xserver.displayManager.autoLogin.enable = true;
+#  services.xserver.displayManager.autoLogin.user = "nixos-dd";
 
   # Install firefox.
   programs.firefox.enable = true;
@@ -125,6 +127,8 @@
     kdePackages.karousel
     vmware-workstation
     flatpak
+    stremio
+
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
@@ -157,6 +161,7 @@
 
   #**** SERVICES *****
   services.netbird.enable = true;
+  services.protonmail-bridge.enable = true;
 
   #**** Environment Shells 
   environment.shells = with pkgs; [ zsh ];
