@@ -160,14 +160,12 @@
   #services.protonmail-bridge.enable = true;
 
   #**** Environment Shells 
-  environment.shells = with pkgs; [ zsh ];
+  environment.shells = with pkgs; [ zsh nushell ];
   users.defaultUserShell = pkgs.nushell;
- 
+  programs.zsh.enable = true;
 
   #**** PROGRAMS *****
   programs.thunderbird.enable = true;
-  #programs.appimage.enable = true;
-  programs.zsh.enable = true;
 
   # VMware Workstation criteria
   virtualisation.vmware.host.enable = true;
