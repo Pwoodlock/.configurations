@@ -60,7 +60,7 @@
       nixos-lenovo = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
         modules = [./lenovo.nix];
-      }
+      };
     };
 
 

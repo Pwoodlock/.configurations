@@ -93,12 +93,11 @@
     description = "Patrick Woodlock";
     extraGroups = [ "networkmanager" "wheel" "dialout" ];
     packages = with pkgs; [
-      discord
-      obsidian
+
       kdePackages.kate
       thunderbird
 #      kdePackages.kdeconnect-kde
-      protonmail-bridge
+#      protonmail-bridge
 
     ];
   };
@@ -122,11 +121,10 @@
     curl
     htop
     zsh
-    netbird
-    netbird-ui
     kdePackages.karousel
     vmware-workstation
-    terraform
+    open-vm-tools
+    
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
@@ -159,7 +157,7 @@
 
   #**** SERVICES *****
   services.netbird.enable = true;
-  services.protonmail-bridge.enable = true;
+  #services.protonmail-bridge.enable = true;
 
   #**** Environment Shells 
   environment.shells = with pkgs; [ zsh ];
@@ -168,7 +166,7 @@
 
   #**** PROGRAMS *****
   programs.thunderbird.enable = true;
-  programs.appimage.enable = true;
+  #programs.appimage.enable = true;
   programs.zsh.enable = true;
 
   # VMware Workstation criteria

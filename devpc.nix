@@ -26,19 +26,53 @@ in
 
   # Packages to install in the user's environment
   home.packages = [
+
+    #     Terminal Related Applications
+
     pkgs.oh-my-posh
     pkgs.waveterm
-    pkgs.microsoft-edge
-    pkgs.ungoogled-chromium
-    pkgs.lutris
-    pkgs.nextcloud-client
     pkgs.nushell
     pkgs.starship
     pkgs.carapace
+    pkgs.warp-terminal
+
+    #     Browsers
+
+    pkgs.microsoft-edge
+    pkgs.ungoogled-chromium
+    
+    #     Wine Based Tools
+    pkgs.lutris
+
+    #     Storage Provider API and Clients
+    pkgs.nextcloud-client
+
+
+    #****************************************
+    #       Dev Tools etc.
     pkgs.vscode
+    pkgs.vscode-extensions.github.copilot
+    pkgs.terraform
+    pkgs.packer
+
+
+    #****************************************
     pkgs.discord
     pkgs.openscad
-    pkgs.warp-terminal
+    pkgs.angryipscanner
+    pkgs.unetbootin
+    pkgs.freecad
+
+
+    pkgs.gparted
+    
+    pkgs.appimage-run
+    pkgs.netbird
+    pkgs.netbird-ui
+    pkgs.obsidian
+
+
+
   ];
 
   # Manage user files (optional section)
@@ -137,8 +171,13 @@ in
   # Additional program configurations
   #####################################################
 
-  # Enable Visual Studio Code and Oh My Posh
+  #   Netbird
+
+
+  # Enable Visual Studio Code  (Microsoft)
   programs.vscode.enable = true;
+
+  #   Oh My Posh
   programs.oh-my-posh.enable = true;
   programs.oh-my-posh.enableZshIntegration = true;
   programs.oh-my-posh.enableBashIntegration = true;
