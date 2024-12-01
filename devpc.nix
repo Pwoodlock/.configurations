@@ -34,6 +34,7 @@ in
     pkgs.nushell
     pkgs.starship
     pkgs.carapace
+    pkgs.pinentry-qt
 
 
     #     Browsers
@@ -91,9 +92,12 @@ in
     # EDITOR = "emacs";
   };
 
-  #####################################################
-  # Terminal-related Configuration
-  #####################################################
+######################################################
+#
+#              Programs Configuration
+
+
+
 
   programs = {
     # Bash shell configuration
@@ -148,13 +152,13 @@ in
       };
     };
 
-    # Carapace (completion framework) configuration
+    # Carapace configuration
     carapace = {
       enable = true;
       enableNushellIntegration = true;
     };
 
-    # Starship prompt configuration
+    # Starship configuration
     starship = {
       enable = true;
       settings = {
@@ -165,23 +169,47 @@ in
         };
       };
     };
+
+    # GPG configuration
+    gpg = {
+      enable = true;
+      package = pkgs.gnupg;
+      settings = {
+        trust-model = "tofu+pgp";
+      };
+    };
+
+
+    # VS Code configuration
+    vscode = {
+      enable = true;
+    };
+
+    # Oh My Posh configuration
+    oh-my-posh = {
+      enable = true;
+      enableZshIntegration = true;
+      enableBashIntegration = true;
+    };
+
+    # Home Manager itself
+    home-manager = {
+      enable = true;
+    };
   };
 
-  #####################################################
-  # Additional program configurations
-  #####################################################
 
-  #   Netbird
+#####################################################
+#
+#              Services Configuration
 
 
-  # Enable Visual Studio Code  (Microsoft)
-  programs.vscode.enable = true;
-
-  #   Oh My Posh
-  programs.oh-my-posh.enable = true;
-  programs.oh-my-posh.enableZshIntegration = true;
-  programs.oh-my-posh.enableBashIntegration = true;
-
-  # Enable Home Manager itself
-  programs.home-manager.enable = true;
+ services = {
+    gpg-agent = {
+      enable = true;
+      enableSshSupport = true;
+      pinentryPackage = pkgs.pinentry-qt; # Instead of pinentryFlavor
+      enableExtraSocket = true;
+    };
+  };
 }
