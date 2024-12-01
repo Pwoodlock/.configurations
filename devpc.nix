@@ -22,7 +22,7 @@ in
   nixpkgs.config.allowUnfree = true;
 
   # Home Manager release version for compatibility
-  home.stateVersion = "24.05";  # Please read the comment before changing
+  home.stateVersion = "24.11";  # Please read the comment before changing
 
   # Packages to install in the user's environment
   home.packages = [
