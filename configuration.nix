@@ -161,7 +161,7 @@
 
   #**** Environment Shells 
   environment.shells = with pkgs; [ zsh ];
-  users.defaultUserShell = pkgs.zsh;
+  users.defaultUserShell = pkgs.nushell;
  
 
   #**** PROGRAMS *****

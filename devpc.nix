@@ -34,7 +34,7 @@ in
     pkgs.nushell
     pkgs.starship
     pkgs.carapace
-    pkgs.warp-terminal
+
 
     #     Browsers
 
