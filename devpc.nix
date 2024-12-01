@@ -38,6 +38,7 @@ in
     pkgs.vscode
     pkgs.discord
     pkgs.openscad
+    pkgs.warp-terminal
   ];
 
   # Manage user files (optional section)

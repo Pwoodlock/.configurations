@@ -1,8 +1,23 @@
-# Daily Driver NixOS Machine Alpha 
+#
+#           "DevSec Hardware Stack"
+#
+#
+#  DevSec Various Versions of Nix for DD, Mobile, Cloud, BM
+#  At some stage I will merge everything into one for personal use
+#   
+#  Lenovo Laptop "nixos-lenovo"   (Work Laptop)
+#  Lenovo Laptop "nixos-480i"     (Personal Laptop)
+#  Main daily driver Development PC "nixos-dd" 
+#  Bare metal and Cloud NixOS Servers
+#
+#  Cloud
+#
+#
+
 
 
 {
-  description = "Daily Driver Flake";
+  description = "DevSec Hardware Stack";
 
   inputs = {
     #nixpkgs.url = "nixpkgs/nixos-23.05";
@@ -39,6 +54,13 @@
     nixos-dd = home-manager.lib.homeManagerConfiguration {
       inherit pkgs;
       modules = [ ./devpc.nix ];
+    };
+
+    homeConfigurations = {
+      nixos-lenovo = home-manager.lib.homeManagerConfiguration {
+        inherit pkgs;
+        modules = [./lenovo.nix];
+      }
     };
 
 

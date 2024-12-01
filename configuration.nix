@@ -126,9 +126,7 @@
     netbird-ui
     kdePackages.karousel
     vmware-workstation
-    flatpak
-    stremio
-
+    terraform
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
