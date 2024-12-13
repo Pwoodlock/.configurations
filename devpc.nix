@@ -26,15 +26,14 @@ in
 
   # Packages to install in the user's environment
   home.packages = [
-
     #     Terminal Related Applications
 
     pkgs.oh-my-posh
-    pkgs.waveterm
     pkgs.nushell
     pkgs.starship
     pkgs.carapace
     pkgs.pinentry-qt
+
 
 
     #     Browsers
@@ -44,35 +43,48 @@ in
     
     #     Wine Based Tools
     pkgs.lutris
+    pkgs.protonup-qt
 
     #     Storage Provider API and Clients
-    pkgs.nextcloud-client
+
 
 
     #****************************************
-    #       Dev Tools etc.
+    #       Dev Tools etc & Packages
     pkgs.vscode
     pkgs.vscode-extensions.github.copilot
     pkgs.terraform
     pkgs.packer
+    pkgs.ansible
+    pkgs.podman
+    pkgs.kubectl
+    pkgs.helm
+    pkgs.ansible-lint
+    pkgs.python313
 
 
-    #****************************************
+
+
+
+    # System Tools
+    pkgs.appimage-run
+    pkgs.gparted
+
+
+
+
+    # User Applications
+    pkgs.netbird
+    pkgs.netbird-ui
+    pkgs.obsidian
     pkgs.discord
     pkgs.openscad
     pkgs.angryipscanner
     pkgs.unetbootin
     pkgs.freecad
-
-
-    pkgs.gparted
-    
-    pkgs.appimage-run
-    pkgs.netbird
-    pkgs.netbird-ui
-    pkgs.obsidian
-
-
+    pkgs.libreoffice
+    pkgs.virt-viewer
+    pkgs.nextcloud-client
 
   ];
 
@@ -112,6 +124,8 @@ in
       shellAliases = myAliases;
     };
 
+
+
     # Git configuration
     git = {
       enable = true;
@@ -149,6 +163,8 @@ in
         vi   = "hx";
         vim  = "hx";
         nano = "hx";
+        htop = "hx";
+        
       };
     };
 
@@ -187,9 +203,9 @@ in
 
     # Oh My Posh configuration
     oh-my-posh = {
-      enable = true;
-      enableZshIntegration = true;
-      enableBashIntegration = true;
+      enable = false;
+      enableZshIntegration = false;
+      enableBashIntegration = false;
     };
 
     # Home Manager itself
@@ -197,7 +213,6 @@ in
       enable = true;
     };
   };
-
 
 #####################################################
 #

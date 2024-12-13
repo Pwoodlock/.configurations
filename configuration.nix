@@ -86,7 +86,6 @@
   # services.xserver.libinput.enable = true;
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
-
   
   users.users.nixos-dd = {
     isNormalUser = true;
@@ -96,15 +95,15 @@
 
       kdePackages.kate
       thunderbird
-#      kdePackages.kdeconnect-kde
-#      protonmail-bridge
+      vorta
+      
 
     ];
   };
 
   # Enable automatic login for the user.
-#  services.xserver.displayManager.autoLogin.enable = true;
-#  services.xserver.displayManager.autoLogin.user = "nixos-dd";
+  services.xserver.displayManager.autoLogin.enable = false;
+  services.xserver.displayManager.autoLogin.user = "nixos-dd";
 
   # Install firefox.
   programs.firefox.enable = true;
@@ -124,7 +123,12 @@
     kdePackages.karousel
     vmware-workstation
     open-vm-tools
-    
+    borgbackup 
+    borgmatic
+    kdePackages.full
+    flatpak
+    kdePackages.discover
+    kdePackages.plasma-workspace-wallpapers
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
@@ -157,20 +161,83 @@
 
   #**** SERVICES *****
   services.netbird.enable = true;
-  #services.protonmail-bridge.enable = true;
+  services.flatpak.enable = true;
 
   #**** Environment Shells 
-  environment.shells = with pkgs; [ zsh nushell ];
+  environment.shells = with pkgs; [ nushell ];
   users.defaultUserShell = pkgs.nushell;
-  programs.zsh.enable = true;
+  programs.zsh.enable = false;
+
 
   #**** PROGRAMS *****
   programs.thunderbird.enable = true;
+  programs.kdeconnect.enable = true;
+  programs.appimage.enable = true;
+
+
 
   # VMware Workstation criteria
   virtualisation.vmware.host.enable = true;
   boot.kernelModules = [
-  "vmmon"  # VMware Monitor
-  "vmnet"  # VMware Network
-];
+    "vmmon"  # VMware Monitor
+    "vmnet"  # VMware Network
+  ];  # Close the kernelModules list here
+
+
+
+
+
+  # Borgmatic Configuration
+  #
+  # Enable the borgmatic service
+  services.borgmatic = {
+    enable = true;
+    configurations = {
+      main = {
+        source_directories = [
+          "/home/nixos-dd/Documents"
+        ];
+        repositories = [
+          {
+            path = "ssh://h2bu90a2@h2bu90a2.repo.borgbase.com/./repo";
+            label = "borgbase";
+          }
+        ];
+        storage = {
+          encryption_passcommand = "cat /home/nixos-dd/.ssh/borgbase/nixos-dd/passphrase";
+          ssh_command = "ssh -i /home/nixos-dd/.ssh/borgbase/nixos-dd/borg-nixos-dd";
+          compression = "lzma";
+        };
+        retention = {
+          keep_daily = 7;
+          keep_weekly = 4;
+          keep_monthly = 2;
+        };
+        consistency = {
+          checks = [
+            { name = "repository"; frequency = "2 weeks"; }
+            { name = "archives"; frequency = "4 weeks"; }
+          ];
+          check_last = 3;
+        };
+        hooks = {
+          before_backup = [
+            "echo 'Starting backup' >> /var/log/borgmatic.log"
+          ];
+          after_backup = [
+            "echo 'Backup complete' >> /var/log/borgmatic.log"
+          ];
+        };
+      };
+    };
+  };
+
+  # Configure the systemd timer for borgmatic
+  systemd.timers.borgmatic = {
+    wantedBy = [ "timers.target" ];
+    timerConfig = {
+      OnCalendar = "daily";
+      Persistent = true;
+    };
+  };
 }
