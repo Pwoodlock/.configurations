@@ -1,3 +1,15 @@
+# When sometimes you just want to clean up your NixOS system without going through the hassle of running multiple commands, this script can help you out.
+# It provides a simple menu to show disk usage, perform basic cleaning, aggressive cleaning, nuclear cleaning, and update NixOS.
+# You can run this script as a regular user, and it will prompt you for sudo access when required.
+#
+# It's Alpha but it works and hasn't caused any issues "yet!" Use at your own risk. :-)
+# 
+# Usage: chmod +x Nixos-Maintenance.sh
+#        ./Nixos-Maintenance.sh
+#
+
+
+
 #!/usr/bin/env bash
 
 # Set colors
