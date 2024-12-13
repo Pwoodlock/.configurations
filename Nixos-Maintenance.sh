@@ -1,16 +1,13 @@
-# When sometimes you just want to clean up your NixOS system without going through the hassle of running multiple commands, this script can help you out.
-# It provides a simple menu to show disk usage, perform basic cleaning, aggressive cleaning, nuclear cleaning, and update NixOS.
-# You can run this script as a regular user, and it will prompt you for sudo access when required.
+#!/usr/bin/env bash
+
+# When sometimes you just want to clean up your NixOS system without going through the hassle of running multiple commands,
+# this script can help you out. It provides a simple menu to show disk usage, perform basic cleaning, aggressive cleaning,
+# nuclear cleaning, and update NixOS. You can run this script as a regular user, and it will prompt you for sudo access when required.
 #
 # It's Alpha but it works and hasn't caused any issues "yet!" Use at your own risk. :-)
 # 
 # Usage: chmod +x Nixos-Maintenance.sh
 #        ./Nixos-Maintenance.sh
-#
-
-
-
-#!/usr/bin/env bash
 
 # Set colors
 RED='\033[0;31m'
@@ -34,20 +31,63 @@ confirm_action() {
     [[ $REPLY =~ ^[Yy]$ ]]
 }
 
+# Function to ensure ncdu is available
+ensure_ncdu() {
+    if ! command -v ncdu &> /dev/null; then
+        print_color $YELLOW "ncdu not found. Installing temporarily through nix-shell..."
+        nix-shell -p ncdu --run "sudo ncdu $1"
+    else
+        sudo ncdu $1
+    fi
+}
+
+# Function for detailed disk analysis
+analyze_disk_usage() {
+    print_color $BLUE "\nDisk Analysis Options:"
+    echo "1. Full system analysis (may take several minutes)"
+    echo "2. Analyze /nix/store only"
+    echo "3. Analyze home directory"
+    echo "4. Back to main menu"
+    
+    read -p "Select an option (1-4): " choice
+    echo
+    
+    case $choice in
+        1)
+            print_color $BLUE "Analyzing entire system..."
+            ensure_ncdu /
+            ;;
+        2)
+            print_color $BLUE "Analyzing Nix store..."
+            ensure_ncdu /nix/store
+            ;;
+        3)
+            print_color $BLUE "Analyzing home directory..."
+            ensure_ncdu $HOME
+            ;;
+        4)
+            return
+            ;;
+        *)
+            print_color $RED "Invalid option!"
+            ;;
+    esac
+}
+
 # Function to check configuration
 check_configuration() {
     print_color $BLUE "\nChecking NixOS configuration..."
-
+    
     # Check for common configuration issues
     if grep -q "services.xserver.displayManager.autoLogin" /etc/nixos/configuration.nix; then
         print_color $YELLOW "WARNING: Found deprecated autoLogin path. Consider updating to 'services.displayManager.autoLogin'"
     fi
-
+    
     # Check download buffer size format
     if grep -q "download-buffer-size.*MiB" /etc/nixos/configuration.nix; then
         print_color $YELLOW "WARNING: Found potentially invalid download-buffer-size format. Should be in bytes, not MiB"
     fi
-
+    
     # Check Git status
     if [ -d .git ]; then
         if ! git diff-index --quiet HEAD --; then
@@ -55,13 +95,13 @@ check_configuration() {
             git status --short
         fi
     fi
-
+    
     # Verify flake configuration
     if [ -f flake.nix ]; then
         print_color $BLUE "Checking flake configuration..."
         nix flake check 2>/dev/null || print_color $YELLOW "WARNING: Flake check failed. Consider reviewing flake.nix"
     fi
-
+    
     echo
 }
 
@@ -69,23 +109,23 @@ check_configuration() {
 fix_common_issues() {
     if confirm_action "Would you like to automatically fix common configuration issues?"; then
         print_color $BLUE "Attempting to fix common issues..."
-
+        
         # Backup original configuration
         sudo cp /etc/nixos/configuration.nix /etc/nixos/configuration.nix.backup
         print_color $GREEN "Configuration backup created at /etc/nixos/configuration.nix.backup"
-
+        
         # Fix autoLogin path
         if grep -q "services.xserver.displayManager.autoLogin" /etc/nixos/configuration.nix; then
             sudo sed -i 's/services.xserver.displayManager.autoLogin/services.displayManager.autoLogin/g' /etc/nixos/configuration.nix
             print_color $GREEN "Fixed autoLogin path"
         fi
-
+        
         # Fix download buffer size format
         if grep -q "download-buffer-size.*MiB" /etc/nixos/configuration.nix; then
             sudo sed -i 's/download-buffer-size = ".*MiB"/download-buffer-size = 500000000/g' /etc/nixos/configuration.nix
             print_color $GREEN "Fixed download-buffer-size format"
         fi
-
+        
         print_color $GREEN "Fixes applied! Please review changes before rebuilding."
     fi
 }
@@ -105,13 +145,13 @@ basic_cleaning() {
         print_color $BLUE "Performing basic cleaning..."
         print_color $YELLOW "Removing old home-manager generations..."
         home-manager expire-generations "-30 days"
-
+        
         print_color $YELLOW "Removing old system generations..."
         sudo nix-collect-garbage --delete-old
-
+        
         print_color $YELLOW "Removing old boot entries..."
         sudo /run/current-system/bin/switch-to-configuration boot
-
+        
         print_color $GREEN "Basic cleaning completed!"
     fi
 }
@@ -122,14 +162,14 @@ aggressive_cleaning() {
         print_color $BLUE "Performing aggressive cleaning..."
         print_color $YELLOW "Removing unused packages..."
         sudo nix-store --gc
-
+        
         print_color $YELLOW "Cleaning up old profiles..."
         sudo nix-collect-garbage -d
-
+        
         print_color $YELLOW "Cleaning flake cache..."
         rm -rf ~/.cache/nix/flake-registry.json
         rm -rf /nix/var/nix/gcroots/auto/*
-
+        
         print_color $GREEN "Aggressive cleaning completed!"
     fi
 }
@@ -141,13 +181,13 @@ nuclear_cleaning() {
         print_color $YELLOW "Deleting all old generations..."
         sudo nix-collect-garbage --delete-old
         sudo nixos-rebuild boot
-
+        
         print_color $YELLOW "Removing all generations except current..."
         nix profile wipe-history --profile /nix/var/nix/profiles/system --older-than 0d
-
+        
         print_color $YELLOW "Cleaning home-manager generations..."
         home-manager generations | awk '/[0-9]/ {print $5}' | xargs -I{} home-manager remove-generations {}
-
+        
         print_color $GREEN "Nuclear cleaning completed!"
     fi
 }
@@ -157,7 +197,7 @@ update_nixos() {
     if confirm_action "Would you like to create a test build before updating?"; then
         print_color $BLUE "Creating test build..."
         sudo nixos-rebuild test --flake .#
-
+        
         if confirm_action "Test build completed. Would you like to proceed with the update?"; then
             print_color $BLUE "Updating NixOS..."
             sudo nixos-rebuild switch --flake .#
@@ -184,28 +224,30 @@ while true; do
     echo "1. Check configuration for common issues"
     echo "2. Fix common configuration issues"
     echo "3. Show disk usage"
-    echo "4. Basic cleaning (30-day-old generations)"
-    echo "5. Aggressive cleaning (unused packages + flake cache)"
-    echo "6. Nuclear cleaning (WARNING: removes all old generations)"
-    echo "7. Update NixOS (with test option)"
-    echo "8. Exit"
+    echo "4. Detailed disk analysis (ncdu)"
+    echo "5. Basic cleaning (30-day-old generations)"
+    echo "6. Aggressive cleaning (unused packages + flake cache)"
+    echo "7. Nuclear cleaning (WARNING: removes all old generations)"
+    echo "8. Update NixOS (with test option)"
+    echo "9. Exit"
     echo
-
-    read -p "Select an option (1-8): " choice
+    
+    read -p "Select an option (1-9): " choice
     echo
-
+    
     case $choice in
         1) check_configuration ;;
         2) fix_common_issues ;;
         3) show_disk_usage ;;
-        4) basic_cleaning ;;
-        5) aggressive_cleaning ;;
-        6) nuclear_cleaning ;;
-        7) update_nixos ;;
-        8) print_color $GREEN "Goodbye!"; exit 0 ;;
+        4) analyze_disk_usage ;;
+        5) basic_cleaning ;;
+        6) aggressive_cleaning ;;
+        7) nuclear_cleaning ;;
+        8) update_nixos ;;
+        9) print_color $GREEN "Goodbye!"; exit 0 ;;
         *) print_color $RED "Invalid option!" ;;
     esac
-
+    
     echo
     read -p "Press Enter to continue..."
 done

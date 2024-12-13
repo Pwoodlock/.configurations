@@ -45,8 +45,6 @@ in
     pkgs.lutris
     pkgs.protonup-qt
 
-    #     Storage Provider API and Clients
-
 
 
     #****************************************
