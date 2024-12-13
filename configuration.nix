@@ -126,7 +126,6 @@
     borgbackup 
     borgmatic
     kdePackages.full
-    flatpak
     kdePackages.discover
     kdePackages.plasma-workspace-wallpapers
   ];
@@ -158,6 +157,7 @@
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "24.11"; # Did you read the comment?
   nix.settings.experimental-features = [ "nix-command" "flakes" ] ;
+  nix.settings.download-buffer-size = "500MiB";
 
   #**** SERVICES *****
   services.netbird.enable = true;

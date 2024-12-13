@@ -85,7 +85,9 @@ in
     pkgs.libreoffice
     pkgs.virt-viewer
     pkgs.nextcloud-client
-
+    pkgs.inkscape-with-extensions
+    pkgs.krita
+    pkgs.gimp-with-plugins
   ];
 
   # Manage user files (optional section)
