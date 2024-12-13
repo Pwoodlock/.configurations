@@ -15,56 +15,46 @@
 #
 
 
-
 {
   description = "DevSec Hardware Stack";
-
   inputs = {
-    #nixpkgs.url = "nixpkgs/nixos-23.05";
-
-    # use the following for unstable:
-    nixpkgs.url = "nixpkgs/nixos-unstable"; # Using Unstable for now as I will use both at a later stage. Unstable is practically Rolling Release like Arch
-    # or any branch you want:
-    # nixpkgs.url = "nixpkgs/{BRANCH-NAME}";
-    home-manager.url = "github:nix-community/home-manager/master";
-    home-manager.inputs.nixpkgs.follows = "nixpkgs";
-
-
-
+    nixpkgs.url = "nixpkgs/nixos-unstable";
+    home-manager = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { self, nixpkgs, home-manager, ... }:
-    let lib = nixpkgs.lib;
-    pkgs = nixpkgs.legacyPackages. ${system};
-    system = "x86_64-linux";
-    in {
-
-
-
+  outputs = { self, nixpkgs, home-manager, ... }@inputs: {
+    # NixOS configurations
     nixosConfigurations = {
-      # nixos is the name of the system and in this case the primary configuration. We Will add more configurations later.
-     nixos = lib.nixosSystem {
-      inherit system;
-      modules = [ ./configuration.nix ];
-     };
-   };
+      nixos = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        modules = [
+          ./configuration.nix
+          home-manager.nixosModules.home-manager
+          {
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.users.nixos-dd = import ./devpc.nix;
+          }
+        ];
+      };
 
-    homeConfigurations = {
-    # Now it's nixos-dd which is the actual users home directory.
-    nixos-dd = home-manager.lib.homeManagerConfiguration {
-      inherit pkgs;
-      modules = [ ./devpc.nix ];
+      # Add other NixOS configurations here if needed
     };
 
+    # Standalone home-manager configurations
     homeConfigurations = {
-      nixos-lenovo = home-manager.lib.homeManagerConfiguration {
-        inherit pkgs;
-        modules = [./lenovo.nix];
+      "nixos-dd" = home-manager.lib.homeManagerConfiguration {
+        pkgs = nixpkgs.legacyPackages.x86_64-linux;
+        modules = [ ./devpc.nix ];
+      };
+
+      "nixos-lenovo" = home-manager.lib.homeManagerConfiguration {
+        pkgs = nixpkgs.legacyPackages.x86_64-linux;
+        modules = [ ./lenovo.nix ];
       };
     };
-
-
-    };
   };
-
 }
