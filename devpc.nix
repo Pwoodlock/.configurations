@@ -60,6 +60,10 @@ in
     pkgs.ansible-lint
     pkgs.python313
 
+    # --> EDA Tools
+    #
+
+
 
 
 
@@ -86,6 +90,8 @@ in
     pkgs.inkscape-with-extensions
     pkgs.krita
     pkgs.gimp-with-plugins
+
+
   ];
 
   # Manage user files (optional section)
