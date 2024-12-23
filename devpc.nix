@@ -59,9 +59,10 @@ in
     pkgs.helm
     pkgs.ansible-lint
     pkgs.python313
+    pgks.ventoy-full
 
     # --> EDA Tools
-    #
+    # flatpak install --from https://flathub.org/repo/appstream/org.kicad.KiCad.flatpakref
 
 
 
